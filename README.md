@@ -8,6 +8,7 @@ Le projet est divisé en deux grandes parties :
 - Reconstitution du réseau à partir des chaînes fournies.
 - Optimisation du réseau afin de réduire la longueur totale des chaînes tout en respectant la capacité maximale des câbles.
 
+
 🧠 Concepts et structures de données
 
 Plusieurs structures de données sont implémentées et comparées pour tester leur efficacité :
@@ -19,9 +20,11 @@ Ces structures permettent d’évaluer les performances en temps de calcul lors 
 
 Un compilateur C standard est requis (gcc recommandé).
 
+
 📊 Visualisation
 
 Les réseaux et chaînes peuvent être affichés sous forme de fichiers SVG (HTML), lisibles directement dans un navigateur web.
+
 
 🎓 Contexte académique
 
