@@ -1,4 +1,4 @@
-# Réorganisation d’un réseau de fibres optiques
+# Réorganisation d’un réseau de fibres optiques (langage de programmation - C)
 
 📌 Description
 Ce projet a pour objectif la reconstitution et la réorganisation d’un réseau de fibres optiques à partir d’un ensemble de chaînes décrivant les connexions entre clients et concentrateurs. Le réseau est modélisé sous forme de graphe afin d’analyser sa structure et d’optimiser l’utilisation des fibres disponibles.
