@@ -61,7 +61,7 @@ Reseau* reconstitueReseauHachage(Chaines *C, int M){
     // Création de la table de hachage
     TableHachage *H = (TableHachage*)malloc(sizeof(TableHachage));
     H->tailleMax = M;
-    H->T = (CellNoeud**)malloc(sizeof(CellNoeud*));
+    H->T = (CellNoeud**)malloc(sizeof(CellNoeud*) * M);
     for (int i = 0; i < M; i++){
         H->T[i] = NULL;
     }

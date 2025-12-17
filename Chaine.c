@@ -55,7 +55,7 @@ Chaines *lectureChaines(FILE *f){
 
 void ecrireChaines(Chaines *C, FILE *fic){
 
-     if (!C && !fic) return;
+     if (!C || !fic) return;
 
      /* Ecriture du nombre de chaînes et de gamma */
      fprintf(fic, "NbChain: %d\n", C->nbChaines);

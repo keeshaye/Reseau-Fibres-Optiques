@@ -13,7 +13,7 @@ void chaineCoordMinMax(Chaines* C, double* xmin, double* ymin, double* xmax, dou
             if (p->x < *xmin) *xmin = p->x;
             if (p->y < *ymin) *ymin = p->y;
             if (p->x > *xmax) *xmax = p->x;
-            if (p->y > *ymax) *ymax = p->x;
+            if (p->y > *ymax) *ymax = p->y;
             p = p->suiv; 
         }
         c = c->suiv;
@@ -64,8 +64,8 @@ void insererNoeudArbre(Noeud* n, ArbreQuat** a, ArbreQuat* parent){
         Noeud *ancien = (*a)->noeud;
         (*a)->noeud = NULL;
 
-        insererNoeudArbre(ancien, a, parent);
-        insererNoeudArbre(n, a, parent);
+        insererNoeudArbre(ancien, a, *a);
+        insererNoeudArbre(n, a, *a);
         return;
     }
 
@@ -90,6 +90,11 @@ Noeud* rechercheCreeNoeudArbre(Reseau* R, ArbreQuat** a, ArbreQuat* parent, doub
         n->voisins = NULL;
         n->num = ++(R->nbNoeuds);
 
+        CellNoeud *cn = (CellNoeud*)malloc(sizeof(CellNoeud));
+        cn->nd = n;
+        cn->suiv = R->noeuds;
+        R->noeuds = cn;
+
         insererNoeudArbre(n, a, parent);
         return n;
     }
@@ -106,6 +111,11 @@ Noeud* rechercheCreeNoeudArbre(Reseau* R, ArbreQuat** a, ArbreQuat* parent, doub
         n->y = y;
         n->voisins = NULL;
         n->num = ++(R->nbNoeuds);
+
+        CellNoeud *cn = (CellNoeud*)malloc(sizeof(CellNoeud));
+        cn->nd = n;
+        cn->suiv = R->noeuds;
+        R->noeuds = cn;
 
         insererNoeudArbre(n, a, parent);
         return n;
@@ -142,51 +152,53 @@ Reseau* reconstitueReseauArbre(Chaines* C) {
     chaineCoordMinMax(C, &xmin, &ymin, &xmax, &ymax);
 
     /* 3. Racine de l’arbre quaternaire */
-    ArbreQuat* arbre = creerArbreQuat(
-        (xmin + xmax) / 2.0,
-        (ymin + ymax) / 2.0,
-        xmax - xmin,
-        ymax - ymin
-    );
+    ArbreQuat* arbre = creerArbreQuat((xmin + xmax) / 2.0, (ymin + ymax) / 2.0, xmax - xmin, ymax - ymin);
 
     /* 4. Parcours des chaînes */
     CellChaine* ch = C->chaines;
-    while (ch) {
+    while (ch){
         CellPoint* p = ch->points;
-        Noeud *prec = NULL, *cour = NULL;
+        Noeud *premier = NULL, *prec = NULL, *cour = NULL;
 
-        /* Premier point */
-        if (p) {
-            prec = rechercheCreeNoeudArbre(R, &arbre, NULL, p->x, p->y);
-            p = p->suiv;
-        }
+        while (p){
+            cour = rechercheCreeNoeudArbre(R, &arbre, arbre, p->x, p->y);
 
-        /* Points suivants */
-        while (p) {
-            cour = rechercheCreeNoeudArbre(R, &arbre, NULL, p->x, p->y);
+            if (!premier)
+                premier = cour;
 
-            /* ajout liaison prec <-> cour */
-            CellNoeud* v1 = malloc(sizeof(CellNoeud));
-            v1->nd = cour;
-            v1->suiv = prec->voisins;
-            prec->voisins = v1;
+            if (prec && prec != cour){
+                /* vérifier si voisin déjà existant */
+                CellNoeud *v = prec->voisins;
+                int existe = 0;
+                while (v){
+                    if (v->nd == cour){
+                        existe = 1;
+                        break;
+                    }
+                    v = v->suiv;
+                }
 
-            CellNoeud* v2 = malloc(sizeof(CellNoeud));
-            v2->nd = prec;
-            v2->suiv = cour->voisins;
-            cour->voisins = v2;
+                if (!existe){
+                    CellNoeud* v1 = malloc(sizeof(CellNoeud));
+                    v1->nd = cour;
+                    v1->suiv = prec->voisins;
+                    prec->voisins = v1;
 
+                    CellNoeud* v2 = malloc(sizeof(CellNoeud));
+                    v2->nd = prec;
+                    v2->suiv = cour->voisins;
+                    cour->voisins = v2;
+                }
+            }
+            
             prec = cour;
             p = p->suiv;
         }
 
         /* 5. Commodité */
-        if (ch->points && prec) {
+        if (premier && prec && premier != prec){
             CellCommodite* com = malloc(sizeof(CellCommodite));
-            com->extrA = rechercheCreeNoeudArbre(
-                R, &arbre, NULL,
-                ch->points->x, ch->points->y
-            );
+            com->extrA = premier;
             com->extrB = prec;
             com->suiv = R->commodites;
             R->commodites = com;

@@ -12,17 +12,17 @@ Chaine.o : Chaine.c Chaine.h SVGwriter.h
 SVGwriter.o : SVGwriter.c SVGwriter.h
 	gcc -c SVGwriter.c
 
-ReconstitueReseau : ReconstitueReseau.o Reseau.o Chaine.o SVGwriter.o
-	gcc -o ReconstitueReseau ReconstitueReseau.o Reseau.o Chaine.o SVGwriter.o
+ReconstitueReseau : ReconstitueReseau.o Reseau.o Chaine.o SVGwriter.o Hachage.o ArbreQuat.o
+	gcc -o ReconstitueReseau ReconstitueReseau.o Reseau.o Chaine.o SVGwriter.o Hachage.o ArbreQuat.o
 
-ReconstitueReseau.o : ReconstitueReseau.c Reseau.h 
+ReconstitueReseau.o : ReconstitueReseau.c Reseau.h Hachage.o ArbreQuat.o
 	gcc -c ReconstitueReseau.c
 
 Reseau.o : Reseau.c Reseau.h SVGwriter.h
 	gcc -c Reseau.c
 
 main : main.o Chaine.o Reseau.o Hachage.o ArbreQuat.o SVGwriter.o
-	gcc -o main main.o Chaine.o Reseau.o Hachage.o ArbreQuat.o SVGwriter.o
+	gcc -o main main.o Chaine.o Reseau.o Hachage.o ArbreQuat.o SVGwriter.o -lm
 
 main.o : main.c Chaine.h Reseau.h Hachage.h ArbreQuat.h
 	gcc -c main.c

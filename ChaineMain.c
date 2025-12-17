@@ -37,6 +37,8 @@ int main(int argc, char *argv[]){
     printf("Generation du svg (%s.html)\n", argv[3]);
     afficheChainesSVG(C, argv[3]);
 
+    printf("Longueur totale des chaines : %.2lf\n", longueurTotale(C));
+
     printf("Nombre totals des points : %d\n", comptePointsTotal(C));
 
     return 0;
