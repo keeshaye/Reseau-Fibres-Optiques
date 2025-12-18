@@ -81,7 +81,5 @@ int main(int argc, char *argv[]) {
     fclose(f_res);
     printf("Fichier 00014_burma_write.res écrit avec succès.\n");
 
-
-
     return 0;
 }

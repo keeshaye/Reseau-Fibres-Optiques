@@ -94,10 +94,10 @@ ListeEntiers* BFS_Chemin(Graphe* G, int u, int v) {
     free(vis);
 
     // Reconstitution du chemin
-    ListeEntiers* chemin = creerListeVide();
+    ListeEntiers* chemin = creerListe();
     int courant = v;
     while (courant != -1) {
-        insererTete(chemin, courant);
+        ajoutTete(chemin, courant);
         courant = pred[courant];
     }
     free(pred);
@@ -134,7 +134,7 @@ int reorganiseReseau(Reseau* r) {
             cel = cel->suiv;
         }
 
-        detruireListeEntiers(chemin);
+        libererListe(chemin);
     }
 
     // Vérification contrainte gamma
